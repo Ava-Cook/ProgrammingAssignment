@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page session="true" %>
-<%@ page import="seng2050.SemesterBean" %> 
+<%@ page import="seng2050.Semester, java.util.List" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,17 +11,19 @@
     <h2>Select Your Semester</h2>
 
     <% 
-        SemesterBean semesterBean = (SemesterBean) session.getAttribute("semesterBean");
-        String username = (String) session.getAttribute("username");
+        List<Semester> semesterList = (List<Semester>) session.getAttribute("semesterList");
+        seng2050.Student student = (seng2050.Student) session.getAttribute("student");
     %>
 
-    <% if (semesterBean != null) { %>
-        <p>Welcome, <%= username %>! Please select a semester:</p>
+    <% if (semesterList != null && student != null) { %>
+        <p>Welcome ${student.givenNames}! Please select a semester:</p>
         <form action="SemesterServlet" method="post">
             <label for="semester">Select a semester:</label>
             <select name="semester" id="semester" required>
-                <% for (String semester : semesterBean.getSemesterList()) { %>
-                    <option value="<%= semester %>"><%= semester %></option>
+                <% for (Semester semester : semesterList) { %>
+                    <option value="<%= semester.getSemesterID() %>">
+                        Semester <%= semester.getSemester() %> - <%= semester.getYear() %>
+                    </option>
                 <% } %>
             </select>
             <br><br>

@@ -39,7 +39,7 @@ public class Main {
       tomcat.addServlet("", "EnrollServlet", new EnrollServlet()); 
     
     // Map the servlet
-      ctx.addServletMappingDecoded("/LoginServlet", "LoginServlet");
+      ctx.addServletMappingDecoded("/login", "LoginServlet");
       ctx.addServletMappingDecoded("/SemesterServlet", "SemesterServlet");
       ctx.addServletMappingDecoded("/EnrollServlet", "EnrollServlet");
 

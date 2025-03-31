@@ -13,8 +13,8 @@ import java.util.List;
 public class StudentDAOImpl implements StudentDAO {
 
     private static final String URL = "jdbc:mysql://localhost:3306/UniX";
-    private static final String USER = "root";
-    private static final String PASSWORD = "Password1";
+    private static final String USER = "UniX_admin";
+    private static final String PASSWORD = "P@ssword1";
 
     static {
         try {
@@ -112,7 +112,6 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
 }
-
 
 
 

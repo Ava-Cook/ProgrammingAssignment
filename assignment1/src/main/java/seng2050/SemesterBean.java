@@ -1,15 +1,18 @@
 package seng2050;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class SemesterBean implements Serializable {
-    private String[] semesterList;
+    private List<Semester> semesterList;
 
-    public String[] getSemesterList() {
+    public SemesterBean() {}
+
+    public List<Semester> getSemesterList() {
         return semesterList;
     }
 
-    public void setSemesterList(String[] semesterList) {
+    public void setSemesterList(List<Semester> semesterList) {
         this.semesterList = semesterList;
     }
 }

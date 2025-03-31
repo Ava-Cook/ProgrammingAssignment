@@ -9,17 +9,34 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 //@WebServlet("/SemesterServlet")
+@WebServlet("/SemesterServlet")
 public class SemesterServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String selectedSemester = request.getParameter("semester");
-        
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         HttpSession session = request.getSession();
-        session.setAttribute("semester", selectedSemester);
         
-        response.sendRedirect("courses.jsp"); // Redirect to course selection page
+        // Get the selected semester from the form
+        String semesterIDStr = request.getParameter("semester");
+        
+        if (semesterIDStr != null) {
+            try {
+                int semesterID = Integer.parseInt(semesterIDStr);
+                session.setAttribute("selectedSemester", semesterID);
+
+                // Debugging Output
+                System.out.println("Semester selected: " + semesterID);
+
+                // Redirect to the course selection page
+                response.sendRedirect("EnrollServlet");
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                response.sendRedirect("semester.jsp?error=Invalid semester");
+            }
+        } else {
+            response.sendRedirect("semester.jsp?error=No semester selected");
+        }
     }
 }
+
     
 

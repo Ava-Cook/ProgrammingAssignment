@@ -1,16 +1,20 @@
 package seng2050;
 
-import java.io.Serializable;
+import java.util.List;
 
-public class CourseBean implements Serializable {
-    private String[] courseList;
-    
-    public CourseBean() {
-        this.courseList = new String[]{"Math 101", "CS 202", "History 303", "Physics 404"};
+public class CourseBean {
+    private List<Course> courses;
+
+    public CourseBean(List<Course> courses) {
+        this.courses = courses;
     }
-    
-    public String[] getCourseList() {
-        return courseList;
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }
 

@@ -1,23 +1,43 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page session="true" %>
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="seng2050.Course" %>
+
 <html>
 <head>
-    <title>Enrollment Confirmation</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Registration Confirmation</title>
 </head>
 <body>
-    <h2>Enrollment Confirmation</h2>
-    <p>You have successfully enrolled in the following courses:</p>
-    <ul>
-        <% String[] selectedCourses = (String[]) session.getAttribute("selectedCourses"); %>
-        <% if (selectedCourses != null) { %>
-            <% for (String course : selectedCourses) { %>
-                <li><%= course %></li>
-            <% } %>
-        <% } else { %>
-            <p>No courses selected.</p>
+    <h2>Registration Confirmation</h2>
+    <% 
+        Integer semesterID = (Integer) session.getAttribute("selectedSemester");
+        String studentNo = (String) session.getAttribute("studentNo");
+        List<Course> registeredCourses = (List<Course>) request.getAttribute("registeredCourses");
+    %>
+
+    <p><strong>Student ID:</strong> <%= studentNo %></p>
+    <p><strong>Semester ID:</strong> <%= semesterID %></p>
+
+    <h3>Registered Courses:</h3>
+    <table border="1">
+        <tr>
+            <th>Course ID</th>
+            <th>Course Name</th>
+            <th>Credits</th>
+        </tr>
+        <% if (registeredCourses != null && !registeredCourses.isEmpty()) {
+            for (Course course : registeredCourses) { %>
+        <tr>
+            <td><%= course.getCourseID() %></td>
+            <td><%= course.getCourseName() %></td>
+            <td><%= course.getCredits() %></td>
+        </tr>
+        <% }
+        } else { %>
+        <tr>
+            <td colspan="3">No courses registered.</td>
+        </tr>
         <% } %>
-    </ul>
+    </table>
+    <a href="login.jsp">Back to Login</a>
 </body>
 </html>
