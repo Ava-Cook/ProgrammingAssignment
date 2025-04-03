@@ -32,10 +32,10 @@ public class EnrollServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("doPost() is being called...");
+
         HttpSession session = request.getSession();
         Integer semesterID = (Integer) session.getAttribute("selectedSemester");
-        String studentNo = (String) session.getAttribute("studentNo");  // Assuming studentNo is stored in session
+        String studentNo = (String) session.getAttribute("studentNo");  
 
         if (semesterID == null || studentNo == null) {
             response.sendRedirect("semester.jsp?error=Invalid session");
@@ -43,19 +43,34 @@ public class EnrollServlet extends HttpServlet {
         }
 
         // Get selected course IDs from the form
-        String[] selectedCourses = request.getParameterValues("selectedCourses");
-
+        String[] selectedCourses = request.getParameterValues("selectedCourses");// Store messages to show on confirmation page
+        
+        String message = null;
+        boolean success = true; 
+    
         if (selectedCourses != null) {
             for (String courseID : selectedCourses) {
-                boolean success = RegisterDAO.registerStudent(studentNo, courseID, semesterID);
-                if (!success) {
-                    System.out.println("Failed to register student " + studentNo + " for course " + courseID);
+                try {
+                    boolean registered = RegisterDAO.registerStudent(studentNo, courseID, semesterID);
+                    if (!registered) {
+                        message = "Failed to register for course: " + courseID;
+                        success = false;
+                    }
+                } catch (Exception e) {
+                    message = e.getMessage(); // Capture the specific error message
+                    success = false;
+                    break; // Stop further registrations if an error occurs
                 }
             }
         }
-
+    
+        if (success && message == null) {
+            message = "Registration successful!";
+        }
+    
         // Retrieve registered courses for confirmation page
         List<Course> registeredCourses = RegisterDAO.getRegisteredCourses(studentNo, semesterID);
+        request.setAttribute("message", message);
         request.setAttribute("registeredCourses", registeredCourses);
 
         // Forward to confirmation page
