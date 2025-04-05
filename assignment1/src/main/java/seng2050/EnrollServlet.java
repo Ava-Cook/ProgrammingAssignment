@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/EnrollServlet")
 public class EnrollServlet extends HttpServlet {
@@ -15,7 +16,7 @@ public class EnrollServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Integer semesterID = (Integer) session.getAttribute("selectedSemester");
-       
+        String studentNo = (String) session.getAttribute("studentNo");
         
         if (semesterID == null) {
             
@@ -23,11 +24,18 @@ public class EnrollServlet extends HttpServlet {
             return;
         }
         
+        if (studentNo != null && semesterID != null) {
+            int currentCredits = RegisterDAO.getTotalCredits(studentNo, semesterID);
+            request.setAttribute("currentCredits", currentCredits);
+        }
+
         List<Course> courses = CourseDAO.getCoursesBySemester(semesterID);
         CourseBean courseBean = new CourseBean(courses);
         request.setAttribute("courseBean", courseBean);
-
+        Map<String, Boolean> fullCourses = RegisterDAO.getFullCoursesForSemester(semesterID);
+        request.setAttribute("fullCourses", fullCourses);
         request.getRequestDispatcher("courses.jsp").forward(request, response);
+
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -43,34 +51,22 @@ public class EnrollServlet extends HttpServlet {
         }
 
         // Get selected course IDs from the form
-        String[] selectedCourses = request.getParameterValues("selectedCourses");// Store messages to show on confirmation page
-        
-        String message = null;
-        boolean success = true; 
+        String[] selectedCourses = request.getParameterValues("selectedCourses");// Store messages to show on confirmation page// 
+        //Store messages
+        StringBuilder messageBuilder = new StringBuilder();
     
         if (selectedCourses != null) {
             for (String courseID : selectedCourses) {
-                try {
-                    boolean registered = RegisterDAO.registerStudent(studentNo, courseID, semesterID);
-                    if (!registered) {
-                        message = "Failed to register for course: " + courseID;
-                        success = false;
-                    }
-                } catch (Exception e) {
-                    message = e.getMessage(); // Capture the specific error message
-                    success = false;
-                    break; // Stop further registrations if an error occurs
-                }
+                boolean message = RegisterDAO.registerStudent(studentNo, courseID, semesterID);
+                messageBuilder.append(message).append("<br>"); // Append messages
             }
         }
     
-        if (success && message == null) {
-            message = "Registration successful!";
-        }
+        request.setAttribute("message", messageBuilder.toString());
     
         // Retrieve registered courses for confirmation page
         List<Course> registeredCourses = RegisterDAO.getRegisteredCourses(studentNo, semesterID);
-        request.setAttribute("message", message);
+        
         request.setAttribute("registeredCourses", registeredCourses);
 
         // Forward to confirmation page
