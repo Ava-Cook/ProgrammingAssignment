@@ -1,6 +1,7 @@
 package seng2050;
 
 public class StudentService {
+    
     private StudentDAO studentDAO = new StudentDAOImpl();
    
     /*
@@ -10,15 +11,27 @@ public class StudentService {
      * */
     public Student authenticateStudent(String stdNo, String password)
     {
-        Student s  = studentDAO.getStudentByStdNo(stdNo); // Finds the student based on stdNo
+        Student student  = studentDAO.getStudentByStdNo(stdNo); // Finds the student based on stdNo
         
-        if (s!=null)
+        if (student!=null)
         {
-            if (password.equals(s.getPasswordHash())) // Checks if passwords match
-            {
-                return s;
-            }
+            PasswordSecurity pSec = new PasswordSecurity();
+            if (pSec.verifyPassword(password, student))
+                return student;
+
         }
         return null;
+    }
+
+    public void addStudent(String stdNo, String givenNames, String lastName, String password)
+    {
+        // Generate salt and password hash
+        PasswordSecurity pSec = new PasswordSecurity();
+        Double salt = pSec.generateSalt();
+        String passwordHash = pSec.hashPassword(password, salt);
+
+        // Create student object and add to database
+        Student student  = new Student(stdNo, givenNames, lastName, passwordHash, salt);
+        studentDAO.addStudent(student);
     }
 }

@@ -1,0 +1,125 @@
+/* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+h2 {
+    color: #333;
+}
+
+/* Table Styling */
+table {
+    width: 80%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Course Selection Buttons */
+.enroll-btn {
+    padding: 10px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.enroll-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.enroll-btn.selected {
+    background-color: #28a745;
+    color: white;
+    box-shadow: 2px 2px 10px rgba(40, 167, 69, 0.4);
+}
+
+.enroll-btn.disabled {
+    background-color: #cccccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
+/* Tooltip for Full Courses */
+.tooltip {
+    position: absolute;
+    background-color: black;
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    transform: translateY(-30px);
+}
+
+.change-semester-btn {
+    margin-left: 20px;
+}
+
+.change-semester-btn button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.change-semester-btn button:hover {
+    background-color: #0056b3;
+}
+
+/* Submit Button */
+.submit-btn {
+    margin-top: 20px;
+    padding: 12px 18px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #28a745;
+    color: white;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+/* Centering Form */
+form {
+    text-align: center;
+}

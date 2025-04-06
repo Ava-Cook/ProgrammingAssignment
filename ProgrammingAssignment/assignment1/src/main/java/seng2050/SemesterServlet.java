@@ -23,9 +23,6 @@ public class SemesterServlet extends HttpServlet {
                 int semesterID = Integer.parseInt(semesterIDStr);
                 session.setAttribute("selectedSemester", semesterID);
 
-                // Debugging Output
-                System.out.println("Semester selected: " + semesterID);
-
                 // Redirect to the course selection page
                 response.sendRedirect("EnrollServlet");
             } catch (NumberFormatException e) {

@@ -12,7 +12,14 @@
         Integer semesterID = (Integer) session.getAttribute("selectedSemester");
         String studentNo = (String) session.getAttribute("studentNo");
         List<Course> registeredCourses = (List<Course>) request.getAttribute("registeredCourses");
+        String message = (String) request.getAttribute("message");
     %>
+
+    
+    <%-- Display Error or Success Message --%>
+    <% if (message != null) { %>
+        <p><%= message %></p>
+    <% } %>
 
     <p><strong>Student ID:</strong> <%= studentNo %></p>
     <p><strong>Semester ID:</strong> <%= semesterID %></p>

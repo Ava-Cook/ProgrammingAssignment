@@ -7,15 +7,17 @@ public class Student implements Serializable {
     private String givenNames;
     private String lastName;
     private String passwordHash;
+    private Double salt;
 
     // Constructors
     public Student() {}
 
-    public  Student(String stdNo, String givenNames, String lastName, String passwordHash) {
+    public  Student(String stdNo, String givenNames, String lastName, String passwordHash, Double salt) {
         this.stdNo = stdNo;
         this.givenNames = givenNames;
         this.lastName = lastName;
         this.passwordHash = passwordHash;
+        this.salt = salt;
     }
 
     // Getters and Setters
@@ -30,4 +32,9 @@ public class Student implements Serializable {
 
     public String getPasswordHash() { return passwordHash; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+
+    public Double getSalt() { return salt; }
+    public void setSalt(Double salt) { this.salt = salt; }
+
 }
+

@@ -1,18 +1,18 @@
-package seng2050;
+// package seng2050;
 
-import java.io.Serializable;
-import java.util.List;
+// import java.io.Serializable;
+// import java.util.List;
 
-public class SemesterBean implements Serializable {
-    private List<Semester> semesterList;
+// public class SemesterBean implements Serializable {
+//     private List<Semester> semesterList;
 
-    public SemesterBean() {}
+//     public SemesterBean() {}
 
-    public List<Semester> getSemesterList() {
-        return semesterList;
-    }
+//     public List<Semester> getSemesterList() {
+//         return semesterList;
+//     }
 
-    public void setSemesterList(List<Semester> semesterList) {
-        this.semesterList = semesterList;
-    }
-}
+//     public void setSemesterList(List<Semester> semesterList) {
+//         this.semesterList = semesterList;
+//     }
+// }

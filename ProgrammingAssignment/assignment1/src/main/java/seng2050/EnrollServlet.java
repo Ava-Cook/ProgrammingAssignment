@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/EnrollServlet")
 public class EnrollServlet extends HttpServlet {
@@ -15,33 +16,40 @@ public class EnrollServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Integer semesterID = (Integer) session.getAttribute("selectedSemester");
-       
+        String studentNo = (String) session.getAttribute("studentNo");
         
         if (semesterID == null) {
             
             response.sendRedirect("semester.jsp");
             return;
         }
-        
+
+        if (studentNo != null && semesterID != null) {
+            int currentCredits = RegisterDAO.getTotalCredits(studentNo, semesterID);
+            request.setAttribute("currentCredits", currentCredits);
+        }
+
         List<Course> courses = CourseDAO.getCoursesBySemester(semesterID);
         CourseBean courseBean = new CourseBean(courses);
         request.setAttribute("courseBean", courseBean);
-
+        
+        Map<String, Boolean> fullCourses = RegisterDAO.getFullCoursesForSemester(semesterID);
+        request.setAttribute("fullCourses", fullCourses);
         request.getRequestDispatcher("courses.jsp").forward(request, response);
+
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("doPost() is being called...");
+
         HttpSession session = request.getSession();
         Integer semesterID = (Integer) session.getAttribute("selectedSemester");
-        String studentNo = (String) session.getAttribute("studentNo");  // Assuming studentNo is stored in session
-
+        String studentNo = (String) session.getAttribute("studentNo");  
+        
         if (semesterID == null || studentNo == null) {
             response.sendRedirect("semester.jsp?error=Invalid session");
             return;
         }
-
         // Get selected course IDs from the form
         String[] selectedCourses = request.getParameterValues("selectedCourses");
 
@@ -53,9 +61,11 @@ public class EnrollServlet extends HttpServlet {
                 }
             }
         }
-
+    
+        
         // Retrieve registered courses for confirmation page
         List<Course> registeredCourses = RegisterDAO.getRegisteredCourses(studentNo, semesterID);
+        
         request.setAttribute("registeredCourses", registeredCourses);
 
         // Forward to confirmation page
