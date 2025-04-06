@@ -95,6 +95,7 @@ tr:nth-child(even) {
     border-radius: 5px;
 }
 
+
 .change-semester-btn button:hover {
     background-color: #0056b3;
 }

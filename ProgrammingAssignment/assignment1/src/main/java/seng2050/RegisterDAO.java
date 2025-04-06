@@ -86,13 +86,13 @@ public class RegisterDAO {
         List<String> unmetCourses = new ArrayList<>();
         try (Connection conn = datasource.getConnection()) {
             for (String courseID : selectedCourses) {
-                String assumedQuery = "SELECT assumedKnowledgeID FROM AssumedKnowledge WHERE courseID = ?";
+                String assumedQuery = "SELECT assumedKnowledge FROM AssumedKnowledge WHERE courseID = ?";
                 PreparedStatement assumedStmt = conn.prepareStatement(assumedQuery);
                 assumedStmt.setString(1, courseID);
                 ResultSet rs = assumedStmt.executeQuery();
     
                 while (rs.next()) {
-                    String requiredID = rs.getString("assumedKnowledgeID");
+                    String requiredID = rs.getString("assumedKnowledge");
     
                     String checkCompletion = "SELECT COUNT(*) FROM StudentCourseRegistration " +
                                              "WHERE stdNo = ? AND courseID = ? AND grade IN ('P', 'C', 'D', 'HD')";
@@ -116,7 +116,39 @@ public class RegisterDAO {
         }
         return unmetCourses;
     }
-   
+    public static List<String> getCoursesWithUnmetPrerequisites(String studentNo, String[] selectedCourses) {
+        List<String> unmetCourses = new ArrayList<>();
+        try (Connection conn = datasource.getConnection()) {
+            for (String courseID : selectedCourses) {
+                String prereqQuery = "SELECT preReqKnowledge FROM preRequisiteKnowledge WHERE courseID = ?";
+                PreparedStatement prereqStmt = conn.prepareStatement(prereqQuery);
+                prereqStmt.setString(1, courseID);
+                ResultSet rs = prereqStmt.executeQuery();
+    
+                while (rs.next()) {
+                    String requiredID = rs.getString("preReqKnowledge");
+    
+                    String checkCompletion = "SELECT COUNT(*) FROM StudentCourseRegistration " +
+                            "WHERE stdNo = ? AND courseID = ? AND grade IN ('P', 'C', 'D', 'HD')";
+                    PreparedStatement compStmt = conn.prepareStatement(checkCompletion);
+                    compStmt.setString(1, studentNo);
+                    compStmt.setString(2, requiredID);
+                    ResultSet checkRs = compStmt.executeQuery();
+    
+                    if (checkRs.next() && checkRs.getInt(1) == 0 && !unmetCourses.contains(courseID)) {
+                        unmetCourses.add(courseID);
+                        break;
+                    }
+                    compStmt.close();
+                }
+                prereqStmt.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return unmetCourses;
+    }
+    
     public static boolean registerStudent(String studentNo, String courseID, int semesterID) {
         try (Connection conn = datasource.getConnection()) {
             String sql = "INSERT INTO StudentCourseRegistration (stdNo, courseID, semesterID, grade, mark) VALUES (?, ?, ?, NULL, NULL)";

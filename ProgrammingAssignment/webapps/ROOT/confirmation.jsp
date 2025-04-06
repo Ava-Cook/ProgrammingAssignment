@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="seng2050.Course" %>
-
+<jsp:include page="header.jspf" />
 <html>
 <head>
     <title>Registration Confirmation</title>

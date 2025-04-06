@@ -1,0 +1,7 @@
+<%@ page session="false" %>
+<div style="text-align: right; padding: 10px;">
+    <form action="logout.jsp" method="post" style="display:inline;">
+        <button type="submit">Log Out</button>
+    </form>
+</div>
+<hr>

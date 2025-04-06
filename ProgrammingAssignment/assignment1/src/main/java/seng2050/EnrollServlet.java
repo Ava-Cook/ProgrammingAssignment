@@ -51,8 +51,27 @@ public class EnrollServlet extends HttpServlet {
             return;
         }
         // Get selected course IDs from the form
-        String[] selectedCourses = request.getParameterValues("selectedCourses");
-
+        String[] selectedCourses = request.getParameterValues("selectedCourses");   
+       
+        //Check for unmet prereqs 
+        List<String> unmetPreReqCourses = RegisterDAO.getCoursesWithUnmetPrerequisites(studentNo, selectedCourses);
+        if (!unmetPreReqCourses.isEmpty()) {
+            request.setAttribute("unmetPreReqCourses", unmetPreReqCourses);
+            request.setAttribute("selectedCourses", selectedCourses);
+            request.getRequestDispatcher("error.jsp").forward(request, response);
+            return;
+        }
+        
+        // Check for unmet assumed knowledge
+        List<String> unmetCourses = RegisterDAO.getCoursesWithUnmetAssumedKnowledge(studentNo, selectedCourses);
+        if (!unmetCourses.isEmpty() && request.getParameter("proceedAnyway") == null) {
+            request.setAttribute("unmetCourses", unmetCourses);
+            request.setAttribute("selectedCourses", selectedCourses);
+            request.getRequestDispatcher("warning.jsp").forward(request, response);
+            return;
+        }
+        
+        //register for courses
         if (selectedCourses != null) {
             for (String courseID : selectedCourses) {
                 boolean success = RegisterDAO.registerStudent(studentNo, courseID, semesterID);
@@ -61,13 +80,10 @@ public class EnrollServlet extends HttpServlet {
                 }
             }
         }
-    
         
         // Retrieve registered courses for confirmation page
         List<Course> registeredCourses = RegisterDAO.getRegisteredCourses(studentNo, semesterID);
-        
         request.setAttribute("registeredCourses", registeredCourses);
-
         // Forward to confirmation page
         request.getRequestDispatcher("confirmation.jsp").forward(request, response);
     }

@@ -3,7 +3,7 @@
 <%@ page import="seng2050.Course" %>
 <%@ page import="seng2050.CourseBean" %>
 <%@ page import="java.util.Map" %>
-
+<jsp:include page="header.jspf" />
 <html>
 <head>
     <title>Course Offerings</title>
@@ -20,7 +20,12 @@
         boolean isAtCreditLimit = currentCredits >= 40;
         if (semesterID != null) { 
     %>
-        <p><strong>Selected Semester ID:</strong> <%= semesterID %></p>
+    <p>
+        <strong>Selected Semester ID:</strong> <%= semesterID %>
+        <form action="semester.jsp">
+            <button type="submit">Change Semester</button>
+        </form>
+    </p>
         
         <p><strong>Credits Enrolled:</strong> <span id="currentCredits"><%= currentCredits %></span>/40</p>
     <% 

@@ -1,3 +1,4 @@
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -21,6 +22,7 @@
         <% for (String course : selectedCourses) { %>
             <input type="hidden" name="selectedCourses" value="<%= course %>">
         <% } %>
+        <input type="hidden" name="proceedAnyway" value="true">
         <button type="submit">Proceed Anyway</button>
         <button type="button" onclick="history.back();">Cancel</button>
     </form>
