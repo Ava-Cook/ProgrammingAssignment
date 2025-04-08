@@ -1,7 +1,7 @@
 package seng2050;
 
 import java.util.List;
-
+//makes a list of courses
 public class CourseBean {
     private List<Course> courses;
 

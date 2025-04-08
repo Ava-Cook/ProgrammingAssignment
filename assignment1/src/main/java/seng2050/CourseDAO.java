@@ -47,7 +47,8 @@ public class CourseDAO {
             e.printStackTrace();
         }
 
-    }
+    } 
+   
     public static List<Course> getCoursesBySemester(int semesterID) {
         List<Course> courses = new ArrayList<>();
         String sql = """

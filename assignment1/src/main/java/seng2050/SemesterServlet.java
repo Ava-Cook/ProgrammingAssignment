@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-//@WebServlet("/SemesterServlet")
 @WebServlet("/SemesterServlet")
 public class SemesterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

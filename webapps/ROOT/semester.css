@@ -1,0 +1,112 @@
+/* General Body Styling for Semester Page */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+.semester-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    padding: 20px;
+}
+h2 {
+    color: #333;
+}
+
+/* Form Styling for Semester Selection */
+form {
+    width: 100%;
+    max-width: 400px;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-sizing: border-box;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+select, input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    background-color: #f9f9f9;
+}
+
+select:focus, input[type="submit"]:focus {
+    outline: none;
+    background-color: #dfefe3;
+    
+}
+
+input[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Message Styling */
+p {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Link Styling */
+a {
+    color: #28a745;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Logout Button Wrapper */
+.logout-container form {
+    all: unset;
+    display: inline;
+}
+.logout-container .logout-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.logout-container .logout-btn:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+.logout-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* Move to left */
+    padding: 40px 60px 0 0;       /* Top = 20px, Left = 30px */
+    box-sizing: border-box;
+}
+

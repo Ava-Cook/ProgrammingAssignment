@@ -7,6 +7,7 @@ public class Semester implements Serializable {
     private int semester;
     private int year;
 
+    // Constructor
     public Semester() {}
 
     public Semester(int semesterID, int semester, int year) {
@@ -14,7 +15,8 @@ public class Semester implements Serializable {
         this.semester = semester;
         this.year = year;
     }
-
+    
+    // Getters and setters
     public int getSemesterID() {
         return semesterID;
     }

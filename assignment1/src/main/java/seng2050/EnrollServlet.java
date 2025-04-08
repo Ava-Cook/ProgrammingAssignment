@@ -1,7 +1,6 @@
 package seng2050;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,65 +9,87 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/EnrollServlet")
+
 public class EnrollServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        //get data from the session
         HttpSession session = request.getSession();
         Integer semesterID = (Integer) session.getAttribute("selectedSemester");
         String studentNo = (String) session.getAttribute("studentNo");
-        
+
+        //if theres no semester go back to the semester page
         if (semesterID == null) {
-            
             response.sendRedirect("semester.jsp");
             return;
         }
-        
+
+        //get the students current credits
         if (studentNo != null && semesterID != null) {
             int currentCredits = RegisterDAO.getTotalCredits(studentNo, semesterID);
             request.setAttribute("currentCredits", currentCredits);
         }
-
+        
+        //get the list of courses for the semester chosen
         List<Course> courses = CourseDAO.getCoursesBySemester(semesterID);
         CourseBean courseBean = new CourseBean(courses);
         request.setAttribute("courseBean", courseBean);
+        
+        //get the full couses for the semester chosen
         Map<String, Boolean> fullCourses = RegisterDAO.getFullCoursesForSemester(semesterID);
         request.setAttribute("fullCourses", fullCourses);
         request.getRequestDispatcher("courses.jsp").forward(request, response);
-
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+    
+        //get data from the session  
         HttpSession session = request.getSession();
         Integer semesterID = (Integer) session.getAttribute("selectedSemester");
         String studentNo = (String) session.getAttribute("studentNo");  
-
-        if (semesterID == null || studentNo == null) {
+        
+        //if theres no semester go back to the semester page
+        if (semesterID == null) {
             response.sendRedirect("semester.jsp?error=Invalid session");
             return;
         }
-
+        
         // Get selected course IDs from the form
-        String[] selectedCourses = request.getParameterValues("selectedCourses");// Store messages to show on confirmation page// 
-        //Store messages
-        StringBuilder messageBuilder = new StringBuilder();
-    
+        String[] selectedCourses = request.getParameterValues("selectedCourses");   
+       
+        //Check for unmet prereqs 
+        List<String> unmetPreReqCourses = RegisterDAO.getCoursesWithUnmetPrerequisites(studentNo, selectedCourses);
+        if (!unmetPreReqCourses.isEmpty()) {
+            request.setAttribute("unmetPreReqCourses", unmetPreReqCourses);
+            request.setAttribute("selectedCourses", selectedCourses);
+            request.getRequestDispatcher("error.jsp").forward(request, response);
+            return;
+        }
+        
+        // Check for unmet assumed knowledge
+        List<String> unmetCourses = RegisterDAO.getCoursesWithUnmetAssumedKnowledge(studentNo, selectedCourses);
+        if (!unmetCourses.isEmpty() && request.getParameter("proceedAnyway") == null) {
+            request.setAttribute("unmetCourses", unmetCourses);
+            request.setAttribute("selectedCourses", selectedCourses);
+            request.getRequestDispatcher("warning.jsp").forward(request, response);
+            return;
+        }
+        
+        //register for courses
         if (selectedCourses != null) {
             for (String courseID : selectedCourses) {
-                boolean message = RegisterDAO.registerStudent(studentNo, courseID, semesterID);
-                messageBuilder.append(message).append("<br>"); // Append messages
+                boolean success = RegisterDAO.registerStudent(studentNo, courseID, semesterID);
+                if (!success) {
+                    System.out.println("Failed to register student " + studentNo + " for course " + courseID);
+                }
             }
         }
-    
-        request.setAttribute("message", messageBuilder.toString());
-    
+        
         // Retrieve registered courses for confirmation page
         List<Course> registeredCourses = RegisterDAO.getRegisteredCourses(studentNo, semesterID);
-        
         request.setAttribute("registeredCourses", registeredCourses);
-
         // Forward to confirmation page
         request.getRequestDispatcher("confirmation.jsp").forward(request, response);
     }

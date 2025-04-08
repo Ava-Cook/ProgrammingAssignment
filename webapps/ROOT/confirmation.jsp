@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="seng2050.Course" %>
-
+<jsp:include page="header.jspf" />
 <html>
 <head>
     <title>Registration Confirmation</title>
+    <link rel="stylesheet" type="text/css" href="confirmation.css">
 </head>
 <body>
     <h2>Registration Confirmation</h2>
@@ -15,11 +16,6 @@
         String message = (String) request.getAttribute("message");
     %>
 
-    
-    <%-- Display Error or Success Message --%>
-    <% if (message != null) { %>
-        <p><%= message %></p>
-    <% } %>
 
     <p><strong>Student ID:</strong> <%= studentNo %></p>
     <p><strong>Semester ID:</strong> <%= semesterID %></p>
@@ -45,6 +41,6 @@
         </tr>
         <% } %>
     </table>
-    <a href="login.jsp">Back to Login</a>
+    
 </body>
 </html>
