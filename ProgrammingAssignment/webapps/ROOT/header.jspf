@@ -1,0 +1,7 @@
+
+<div class="logout-container">
+    <form action="logout.jsp" method="post">
+        <button type="submit" class="logout-btn">Log Out</button>
+    </form>
+</div>
+
