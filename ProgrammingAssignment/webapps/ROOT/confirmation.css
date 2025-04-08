@@ -1,0 +1,92 @@
+/* General Body Styling for Confirmation Page */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+h2, h3 {
+    color: #333;
+}
+
+/* Table Styling for Registered Courses */
+table {
+    width: 80%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Message Styling */
+p {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Success/Error Message */
+p.success {
+    color: green;
+    font-weight: bold;
+}
+
+p.error {
+    color: red;
+    font-weight: bold;
+}
+
+
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Logout Button Wrapper */
+.logout-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 30px;
+    box-sizing: border-box;
+}
+
+/* Logout Button */
+.logout-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}

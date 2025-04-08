@@ -73,14 +73,13 @@ public class Main {
     tomcat.addServlet("", "SemesterServlet", new SemesterServlet()); 
     tomcat.addServlet("", "EnrollServlet", new EnrollServlet()); 
     tomcat.addServlet("", "AddStudentServlet", new AddStudentServlet());
-    tomcat.addServlet("", "AssumedKnowledgeServlet", new AssumedKnowledgeServlet());
+    
   // Map the servlet
     ctx.addServletMappingDecoded("/login", "LoginServlet");
     ctx.addServletMappingDecoded("/SemesterServlet", "SemesterServlet");
     ctx.addServletMappingDecoded("/EnrollServlet", "EnrollServlet");
     ctx.addServletMappingDecoded("/addStudent", "AddStudentServlet");
-    ctx.addServletMappingDecoded("/AssumedKnowledgeServlet", "AssumedKnowledgeServlet");
-
+    
     // Start Tomcat
     try {
       tomcat.getConnector();

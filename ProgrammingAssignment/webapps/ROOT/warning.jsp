@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Assumed Knowledge Warning</title>
+    <link rel="stylesheet" type="text/css" href="warning.css">
 </head>
 <body>
     <h2>Warning</h2>

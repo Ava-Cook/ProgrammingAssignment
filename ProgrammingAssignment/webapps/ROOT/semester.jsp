@@ -6,9 +6,10 @@
 <html>
 <head>
     <title>Select Semester</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="semester.css">
 </head>
 <body>
+    <main class="semester-wrapper">
     <h2>Select Your Semester</h2>
 
     <% 
@@ -33,6 +34,7 @@
     <% } else { %>
         <p>Error: Semester information is missing.</p>
     <% } %>
+</main>
 </body>
 </html>
 

@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Pre-requisite Error</title>
+    <link rel="stylesheet" type="text/css" href="error.css">
 </head>
 <body>
     <h2>Error</h2>

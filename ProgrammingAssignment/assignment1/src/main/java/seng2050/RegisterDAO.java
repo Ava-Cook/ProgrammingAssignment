@@ -2,10 +2,8 @@ package seng2050;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -55,9 +53,11 @@ public class RegisterDAO {
         }
     }    
 
+    //map the full courses for the semester chosen
     public static Map<String, Boolean> getFullCoursesForSemester(int semesterID) {
         Map<String, Boolean> fullCourses = new HashMap<>();
-    
+
+        //database information
         try (Connection conn = datasource.getConnection()) {
             String sql = "SELECT co.courseID, co.maxCapacity, COUNT(scr.stdNo) AS enrolled " +
                          "FROM CourseOfferings co " +
@@ -68,7 +68,7 @@ public class RegisterDAO {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, semesterID);
             ResultSet rs = stmt.executeQuery();
-    
+
             while (rs.next()) {
                 String courseID = rs.getString("courseID");
                 int maxCapacity = rs.getInt("maxCapacity");
@@ -81,9 +81,34 @@ public class RegisterDAO {
     
         return fullCourses;
     } 
-    // Method to check if the student has completed the required assumed knowledge
+
+    //get the total number of credits a student is registered for
+    public static int getTotalCredits(String studentNo, int semesterID) {
+        int totalCredits = 0;
+
+        try (Connection conn = datasource.getConnection()) {
+            String sql = "SELECT SUM(c.credits) FROM StudentCourseRegistration r " +
+                         "JOIN Course c ON r.courseID = c.courseID " +
+                         "WHERE r.stdNo = ? AND r.semesterID = ?";
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, studentNo);
+            stmt.setInt(2, semesterID);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                totalCredits = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totalCredits;
+    }
+
+    // Check if the student has completed the required assumed knowledge: get a list of the courses that have assumed knowledge that the student has not completed
     public static List<String> getCoursesWithUnmetAssumedKnowledge(String studentNo, String[] selectedCourses) {
         List<String> unmetCourses = new ArrayList<>();
+
+        //database data for courses with assumedknoledge and a list of assumedknowledges
         try (Connection conn = datasource.getConnection()) {
             for (String courseID : selectedCourses) {
                 String assumedQuery = "SELECT assumedKnowledge FROM AssumedKnowledge WHERE courseID = ?";
@@ -93,7 +118,7 @@ public class RegisterDAO {
     
                 while (rs.next()) {
                     String requiredID = rs.getString("assumedKnowledge");
-    
+                     //database data for courses with assumedknoledge and student registration information to check if a student has compleated those classes
                     String checkCompletion = "SELECT COUNT(*) FROM StudentCourseRegistration " +
                                              "WHERE stdNo = ? AND courseID = ? AND grade IN ('P', 'C', 'D', 'HD')";
                     PreparedStatement compStmt = conn.prepareStatement(checkCompletion);
@@ -116,8 +141,11 @@ public class RegisterDAO {
         }
         return unmetCourses;
     }
+    // Check if the student has completed the required prerequisite knowledge: get a list of the courses that have prerequisite knowledge that the student has not completed
     public static List<String> getCoursesWithUnmetPrerequisites(String studentNo, String[] selectedCourses) {
         List<String> unmetCourses = new ArrayList<>();
+
+        //database data for courses with prerequisites and a list of prerequisites
         try (Connection conn = datasource.getConnection()) {
             for (String courseID : selectedCourses) {
                 String prereqQuery = "SELECT preReqKnowledge FROM preRequisiteKnowledge WHERE courseID = ?";
@@ -127,7 +155,7 @@ public class RegisterDAO {
     
                 while (rs.next()) {
                     String requiredID = rs.getString("preReqKnowledge");
-    
+                    //database data for courses with prerequisites and student registration information to check if a student has compleated those classes
                     String checkCompletion = "SELECT COUNT(*) FROM StudentCourseRegistration " +
                             "WHERE stdNo = ? AND courseID = ? AND grade IN ('P', 'C', 'D', 'HD')";
                     PreparedStatement compStmt = conn.prepareStatement(checkCompletion);
@@ -148,11 +176,13 @@ public class RegisterDAO {
         }
         return unmetCourses;
     }
-    
+
+    //register the student
     public static boolean registerStudent(String studentNo, String courseID, int semesterID) {
         try (Connection conn = datasource.getConnection()) {
             String sql = "INSERT INTO StudentCourseRegistration (stdNo, courseID, semesterID, grade, mark) VALUES (?, ?, ?, NULL, NULL)";
             PreparedStatement stmt = conn.prepareStatement(sql);
+            //put course information into StudentCourseRegistration
             stmt.setString(1, studentNo);
             stmt.setString(2, courseID);
             stmt.setInt(3, semesterID);
@@ -162,6 +192,7 @@ public class RegisterDAO {
             return false;
         }
     }
+
     // Get the list of courses a student is registered for
     public static List<Course> getRegisteredCourses(String studentNo, int semesterID) {
         List<Course> courses = new ArrayList<>();
@@ -181,22 +212,5 @@ public class RegisterDAO {
         }
         return courses;
     }
-    public static int getTotalCredits(String studentNo, int semesterID) {
-        int totalCredits = 0;
-        try (Connection conn = datasource.getConnection()) {
-            String sql = "SELECT SUM(c.credits) FROM StudentCourseRegistration r " +
-                         "JOIN Course c ON r.courseID = c.courseID " +
-                         "WHERE r.stdNo = ? AND r.semesterID = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, studentNo);
-            stmt.setInt(2, semesterID);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                totalCredits = rs.getInt(1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return totalCredits;
-    }
+
 }

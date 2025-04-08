@@ -40,7 +40,7 @@ public class AddStudentServlet extends HttpServlet {
             request.setAttribute("errorMessage", errorMessage);
 
             // Forward to error.jsp
-            RequestDispatcher dispatcher = request.getRequestDispatcher("error.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("addstudent.html");
             dispatcher.forward(request, response);          
         }
 

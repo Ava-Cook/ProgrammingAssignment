@@ -3,6 +3,9 @@
 <%@ page import="seng2050.Course" %>
 <%@ page import="seng2050.CourseBean" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="seng2050.RegisterDAO" %>
+<%@ page import="java.util.Set" %>
+<%@ page import="java.util.HashSet" %>
 <jsp:include page="header.jspf" />
 <html>
 <head>
@@ -18,13 +21,23 @@
         Integer currentCreditsObj = (Integer) request.getAttribute("currentCredits");
         int currentCredits = currentCreditsObj != null ? currentCreditsObj : 0;
         boolean isAtCreditLimit = currentCredits >= 40;
+        String studentNo = (String) session.getAttribute("studentNo"); // Assume student's studentNo is stored in session
+        List<Course> enrolledCourses = RegisterDAO.getRegisteredCourses(studentNo, semesterID); // Fetch enrolled courses
+
+        // Create a set of enrolled course IDs for quick lookup
+        Set<String> enrolledCourseIDs = new HashSet<>();
+        for (Course course : enrolledCourses) {
+            enrolledCourseIDs.add(course.getCourseID());
+        }
         if (semesterID != null) { 
     %>
     <p>
         <strong>Selected Semester ID:</strong> <%= semesterID %>
+        <div class="change-semester-btn">
         <form action="semester.jsp">
             <button type="submit">Change Semester</button>
         </form>
+        </div>
     </p>
         
         <p><strong>Credits Enrolled:</strong> <span id="currentCredits"><%= currentCredits %></span>/40</p>
@@ -51,6 +64,7 @@
 
             <% for (Course course : courseBean.getCourses()) {
                    boolean isFull = fullCourses != null && fullCourses.getOrDefault(course.getCourseID(), false);
+                   boolean isEnrolled = enrolledCourseIDs.contains(course.getCourseID());
             %>
             <tr>
                 <td><%= course.getCourseID() %></td>
@@ -61,6 +75,8 @@
                         <button type="button" class="enroll-btn disabled" disabled title="Course is full">Full</button>
                     <% } else if (isAtCreditLimit) { %>
                         <button type="button" class="enroll-btn disabled" disabled title="Credit limit reached">Maxed</button>
+                    <% }else if (isEnrolled) { %>
+                        <button type="button" class="enroll-btn disabled" disabled title="Already enrolled">Enrolled</button> 
                     <% } else { %>
                     
                         <button 
@@ -84,7 +100,7 @@
             <% } %>
         </table>
         <br>
-        <input type="submit" value="Enroll" class="submit-btn">
+        <input type="submit" value="Confirm" class="submit-btn">
     </form>
 
     <% } else { %>

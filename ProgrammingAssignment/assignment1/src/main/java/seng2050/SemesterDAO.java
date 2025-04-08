@@ -50,6 +50,7 @@ public class SemesterDAO {
 
     }
 
+    //get a list of semesters from the database
     public List<Semester> getAllSemesters() {
         List<Semester> semesters = new ArrayList<>();
         String sql = "SELECT * FROM Semester";
